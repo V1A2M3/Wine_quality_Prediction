@@ -44,22 +44,26 @@ if st.button("🔍 Predict Quality"):
 st.subheader("📁 Bulk Prediction")
 uploaded_file = st.file_uploader("Upload a CSV file with the same feature columns", type=["csv"])
 
-if uploaded_file:
+if pred_file:
     try:
-        uploaded_df = pd.read_csv(uploaded_file)
-        missing = set(feature_names) - set(uploaded_df.columns)
-        if missing:
-            st.error(f"❌ Missing columns in uploaded file: {', '.join(missing)}")
-        else:
-            predictions = model.predict(uploaded_df)
-            uploaded_df["predicted_quality"] = predictions
-            st.write(uploaded_df.head())
+        pred_df = pd.read_csv(pred_file)
 
-            # Download link
-            csv = uploaded_df.to_csv(index=False)
-            st.download_button("📥 Download Results", csv, "wine_quality_predictions.csv", mime="text/csv")
+        # Remove target column if accidentally included
+        if "quality" in pred_df.columns:
+            pred_df = pred_df.drop("quality", axis=1)
+
+        missing = set(feature_names) - set(pred_df.columns)
+        if missing:
+            st.error(f"❌ Missing columns: {', '.join(missing)}")
+        else:
+            pred_df["predicted_quality"] = model.predict(pred_df)
+            st.write(pred_df.head())
+
+            csv = pred_df.to_csv(index=False)
+            st.download_button("📥 Download Predictions", csv, "predicted_wine_quality.csv", mime="text/csv")
     except Exception as e:
-        st.error(f"⚠️ Error reading file: {e}")
+        st.error(f"⚠️ Failed to read prediction CSV: {e}")
+
 
 st.markdown("---")
 st.markdown("Built with ❤️ using Streamlit and scikit-learn")
