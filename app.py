@@ -42,7 +42,7 @@ if st.button("🔍 Predict Quality"):
 
 # --- Bulk CSV Upload Section ---
 st.subheader("📁 Bulk Prediction")
-uploaded_file = st.file_uploader("Upload a CSV file with the same feature columns", type=["csv"])
+pred_file = st.file_uploader("Upload a CSV file for prediction", type=["csv"], key="predict")
 
 if pred_file:
     try:
