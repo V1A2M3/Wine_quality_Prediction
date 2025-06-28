@@ -12,7 +12,7 @@ st.markdown("Upload a CSV or enter wine properties to predict quality.")
 @st.cache_resource
 def train_model():
     # Load the dataset (must be uploaded or bundled)
-    data = pd.read_csv("C:/Users/chitt/Downloads/WineQT.csv")
+    data = pd.read_csv("WineQT.csv")
 
     if "quality" not in data.columns:
         st.error("❌ Dataset must have a 'quality' column.")
